@@ -1,4 +1,7 @@
 \documentclass{article}
+\usepackage{hyperref}
+\usepackage{pdflscape}
+\usepackage{longtable}
 
 \title{Proposal and Contract for 4AL3 ML Project}
 \author{Rebecca Di Filippo, Jake Read, Claire Neilsen}
@@ -9,18 +12,18 @@
 \maketitle
 
 \section{Team Members}
-\raggedright Already listed in the author field
+\raggedright Already listed in the author field.
 
 \section{Task Title and Overview}
-\textbf{Task Title:} Asteroid Classification Using Machine Learning
+\textbf{Task Title:} Asteroid Classification Using Machine Learning \newline
 
 \textbf{Overview:} 
 This project aims to classify asteroids based on their orbital and physical characteristics to predict potentially hazardous asteroids (PHAs) versus non-hazardous ones. 
-Accurate classification of asteroids is crucial for early warning systems, space mission planning, and planetary defense.
+Accurate classification of asteroids is crucial for early warning systems, space mission planning, and planetary defense. \newline
 
 \textbf{Significance:}
 \begin{itemize}
-    \item Helps prevent potential asteroid impacts on Earth.
+    \item Helps analyze the potential threat various asteroids pose to Earth.
     \item Provides insights into asteroid characteristics for scientific and space exploration purposes.
 \end{itemize}
 
@@ -28,20 +31,114 @@ Accurate classification of asteroids is crucial for early warning systems, space
 \begin{itemize}
     \item Class imbalance: less hazardous asteroids in the set, which may affect model performance.
     \item Some features may be correlated or redundant which requires feature selection techniques.
+    \item Some fields are missing, and may need to be approximated based on other features.
+    \item Complex features without clear meaning, that we will have to research to understand.
 \end{itemize}
 
 \section{Task Definition}
 \begin{itemize}
     \item \textbf{Type of Data:} Structured dataset with numerical features (orbital parameters, size) and categorical labels (hazardous vs. non-hazardous).
     \item \textbf{Task Type:} Supervised classification.
-    \item \textbf{Number of Classes:} 2 (Potentially Hazardous, Non Hazardous)
-    \item \textbf{Label Type:} Single-label (asteroid is either hazardous or not).
+    \item \textbf{Number of Classes:} 2 (Potentially Hazardous, Non-Hazardous)
+    \item \textbf{Label Type:} Single-label (asteroid is either potentially hazardous or not).
 \end{itemize}
 
 \section{Problem Description}
 Asteroids pose a threat to Earth.
 While most asteroids orbit safely, some come close enough to be considered potentially hazardous and could cause significant damage if they were to impact Earth.
 Predicting which asteroids are hazardous allows space agencies to prioritize observation on certain asteroids, develop mitigation strategies, and design early-warning systems.
+The classification of asteroids is difficult and time-consuming work, requiring analysis of a large variety of aspects about a given asteroid.
+As such, a model capable of predicting such data would be a great boon.
 
+\section{Data Sources and Plan for Data Collection / Labeling}
+
+\textbf{Data Source and Description:}
+
+The dataset is publicly available on Kaggle under the name \textit{Asteroid Dataset} by user \textit{sakhawat18}.
+It is derived from NASA and JPL’s Small-Body and Asteroid databases, containing both orbital and physical properties for hundreds of thousands of known asteroids.
+The dataset includes 45 features, as follows:
+
+\begin{itemize}
+    \item \textbf{Identifiers and Metadata:} \texttt{id}, \texttt{spkid}, \texttt{full\_name}, \texttt{pdes}, \texttt{name}, \texttt{prefix}, \texttt{orbit\_id}, \texttt{class}
+
+    \item \textbf{Flags:} \texttt{neo} (Near-Earth Object flag), \texttt{pha} (Potentially Hazardous Asteroid flag, 1 = hazardous, 0 = non-hazardous)
+
+    \item \textbf{Physical Properties:} \texttt{H} (absolute magnitude), \texttt{diameter} (km), \texttt{albedo} (surface reflectivity), \texttt{diameter\_sigma} (uncertainty in diameter)
+
+    \item \textbf{Orbital Elements:}
+    \begin{itemize}
+        \item Core orbital parameters: \texttt{e} (eccentricity), \texttt{a} (semi-major axis), \texttt{q} (perihelion distance), \texttt{i} (inclination), \texttt{om} ($\Omega$, longitude of ascending node), \texttt{w} ($\omega$, argument of perihelion), \texttt{ma} (mean anomaly)
+        \item Derived orbital distances: \texttt{ad} (aphelion distance), \texttt{moid} (minimum orbit intersection distance), \texttt{moid\_ld} (MOID in lunar distances)
+        \item Motion and timing: \texttt{n} (mean motion), \texttt{tp} (time of perihelion passage), \texttt{per} (orbital period in days), \texttt{per\_y} (orbital period in years)
+    \end{itemize}
+
+    \item \textbf{Epoch and Reference Data:} \texttt{epoch}, \texttt{epoch\_mjd} (Modified Julian Date), \texttt{epoch\_cal} (calendar format), \texttt{equinox}, \texttt{tp\_cal} (perihelion passage in calendar format)
+
+    \item \textbf{Uncertainties (Standard Deviations):} \texttt{sigma\_e}, \texttt{sigma\_a}, \texttt{sigma\_q}, \texttt{sigma\_i}, \texttt{sigma\_om}, \texttt{sigma\_w}, \texttt{sigma\_ma}, \texttt{sigma\_ad}, \texttt{sigma\_n}, \texttt{sigma\_tp}, \texttt{sigma\_per}
+
+    \item \textbf{Model Fit Quality:} \texttt{rms} (root-mean-square residual, indicating fit accuracy of the orbital solution)
+
+    \item \textbf{Target Label:} \texttt{pha} (Potentially Hazardous Asteroid flag — the classification label to be predicted)
+\end{itemize}
+
+\textbf{Data Handling Plan:}
+\begin{enumerate}
+    \item \textbf{Collection:} We will download the dataset directly from Kaggle using the Kaggle API, complying with its terms of service.
+    \item \textbf{Cleaning:}
+    \begin{itemize}
+        \item Inspect and handle missing values (e.g., impute or drop based on completeness).
+        \item Remove identifier columns that do not provide predictive value.
+        \item Normalize continuous variables to consistent ranges.
+    \end{itemize}
+    \item \textbf{Feature Engineering:}
+    \begin{itemize}
+        \item We plan to experiment with various feature sets. We will begin by experimenting with more obvious features, such as those related to physical properties, and then over time add more features until we're using the entire dataset if that gives the best results.
+        \item Potentially apply dimensionality reduction (PCA) or correlation-based feature selection.
+    \end{itemize}
+    \item \textbf{Label Verification:}
+    The dataset includes a binary label \texttt{PHA}, so no manual labeling is required. We will validate the class balance and ensure consistent encoding.
+    \item \textbf{Imbalance Handling:}
+    Because the hazardous class is rare, we will address class imbalance through oversampling (e.g., SMOTE), undersampling, or weighted loss functions during model training.
+\end{enumerate}
+
+\textbf{Subset Use:}
+If the dataset is too large for efficient prototyping, we may initially work with a random balanced subset, then scale to the full dataset for final training and evaluation. \newline
+
+\textbf{Metadata:}
+We will document all preprocessing decisions, including dropped columns, imputation methods, and feature transformations. \newline
+
+\textbf{Sources:}
+\begin{itemize}
+    \item Kaggle source: \url{https://www.kaggle.com/datasets/sakhawat18/asteroid-dataset}
+    \item Original source: \url{https://ssd.jpl.nasa.gov/tools/sbdb_query.html}
+\end{itemize}
+
+
+\section{Dataset Sample}
+The full dataset has just under one million data points.
+A sample of the first 3 rows can be seen below.
+Only the first 10 columns are shown, as there are too many features to fit in the document otherwise:
+
+% \begin{landscape}
+\begin{scriptsize}
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|c|}
+\caption{First 3 rows of the asteroid dataset (truncated for readability)} \\
+\hline
+\textbf{id} & \textbf{spkid} & \textbf{full\_name} & \textbf{pdes} & \textbf{name} & \textbf{neo} & \textbf{pha} & \textbf{H} & \textbf{diameter} & \textbf{albedo} \\
+\hline
+\endfirsthead
+\hline
+\textbf{id} & \textbf{spkid} & \textbf{full\_name} & \textbf{pdes} & \textbf{name} & \textbf{neo} & \textbf{pha} & \textbf{H} & \textbf{diameter} & \textbf{albedo} \\
+\hline
+\endhead
+a0000001 & 2000001 & 1 Ceres & 1 & Ceres & N & N & 3.4 & 939.4 & 0.09 \\
+\hline
+a0000002 & 2000002 & 2 Pallas & 2 & Pallas & N & N & 4.2 & 545 & 0.101 \\
+\hline
+a0000003 & 2000003 & 3 Juno & 3 & Juno & N & N & 5.33 & 246.596 & 0.214 \\
+\hline
+\end{longtable}
+\end{scriptsize}
+% \end{landscape}
 
 \end{document}
