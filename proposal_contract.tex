@@ -140,5 +140,76 @@ a0000003 & 2000003 & 3 Juno & 3 & Juno & N & N & 5.33 & 246.596 & 0.214 \\
 \end{longtable}
 \end{scriptsize}
 % \end{landscape}
+\section{Proposed Solution}
 
+\subsection*{How we plan to go about solving this problem?}
+\medskip
+Although we haven’t been explicitly taught tree-based ensemble methods yet,
+this approach uses ideas from class such as supervised learning, classification,
+model training, and evaluation. We will build a system that
+cleans and preprocesses the asteroid dataset, selects and engineers relevant
+features, and trains a model using machine learning to classify asteroids as potentially hazardous
+or not. We will handle class imbalance using techniques like oversampling( e.g., SMOTE)),
+or weighted loss, and then evaluate the model.
+
+
+
+\medskip
+
+% What kind of features and target labels do you have?
+\subsection*{Features and Target Labels}
+\medskip
+\textbf{Target label:} \texttt{pha} — binary (1 = potentially hazardous, 0 = non-hazardous). \\
+\textbf{Features:} 
+\begin{itemize}
+    \item \textbf{Physical Properties:} \texttt{H} (absolute magnitude), \texttt{diameter} (km), \texttt{albedo} (surface reflectivity), \texttt{diameter\_sigma} (uncertainty in diameter)
+
+    \item \textbf{Orbital Elements:}
+    \begin{itemize}
+        \item Core orbital parameters: \texttt{e} (eccentricity), \texttt{a} (semi-major axis), \texttt{q} (perihelion distance), \texttt{i} (inclination), \texttt{om} ($\Omega$, longitude of ascending node), \texttt{w} ($\omega$, argument of perihelion), \texttt{ma} (mean anomaly)
+        \item Derived orbital distances: \texttt{ad} (aphelion distance), \texttt{moid} (minimum orbit intersection distance), \texttt{moid\_ld} (MOID in lunar distances)
+        \item Motion and timing: \texttt{n} (mean motion), \texttt{tp} (time of perihelion passage), \texttt{per} (orbital period in days), \texttt{per\_y} (orbital period in years)
+    \end{itemize}
+
+    \item \textbf{Uncertainties (Standard Deviations):} \texttt{sigma\_e}, \texttt{sigma\_a}, \texttt{sigma\_q}, \texttt{sigma\_i}, \texttt{sigma\_om}, \texttt{sigma\_w}, \texttt{sigma\_ma}, \texttt{sigma\_ad}, \texttt{sigma\_n}, \texttt{sigma\_tp}, \texttt{sigma\_per}
+
+    \item \textbf{Model Fit Quality:} \texttt{rms} (root-mean-square residual, indicating fit accuracy of the orbital solution)
+
+\end{itemize}
+
+The left out features are identifiers, metadata, epoch and reference data, that do not contribute to prediction.
+\medskip
+
+\emph{NOTE:We may also create derived features combining orbital and physical properties if needed.}
+
+
+\subsection*{Models}
+\medskip
+\textbf{Favoured Approach:} Gradient Boosted Trees because from research it seems like they handle structured tabular data well, manage non-linear relationships, and allow weighting for class imbalance. \\
+\medskip
+\textbf{Alternative models:} Random Forests, or Neural Networks are worth considering if gradient boosting does not yield good results.
+
+\medskip
+
+\subsection*{Existing Solutions}
+\medskip
+blah blah blah
+
+
+
+\subsection*{Evaulation on Correctness of Model}
+
+blah
+blah
+blah
+\subsection*{Libraries/Tools}
+blah
+
+\subsection*{Sources/References}
+\textbf{Gradient Boosted Trees:} insert source here
+
+\textbf{Existing Solutions:} insert source here
+\medskip
+
+\section{Team Contract}
 \end{document}
