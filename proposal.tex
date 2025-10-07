@@ -214,51 +214,34 @@ The left out features are identifiers, metadata, epoch and reference data, that 
 \medskip
 There exists several deep learning-assisted models of Near Earth Asteroid (NEA) tracking programs. One noted model is described in \textit{Deep learning-assisted near-Earth asteroid tracking in astronomical images}. It focuses on NEA tracking through images. Deep learning has made remarkable strides in tracking through image detection, however neural network training has remained a challenge due to a lack of sufficient data (Du et al., 2024). \\
 
-It has also been noted by Sykes et al. (2000) that gradient boosting can provide an accurate detection and classification model based on asteroid features. The team's goal is to produce an accurate model using that strategy. 
+
+The team chose to use gradient boosted trees due to their high accuracy, and due to the ability to monitor the log loss of the model to check its performance (Kurama, 2025). It has also been noted by Sykes et al. (2000) that gradient boosting can provide an accurate detection and classification model based on asteroid features. The team's goal is to produce an accurate model using that strategy. 
 
 \subsection*{Evaluation on Correctness of Model}
 
-The team will evaluate the performance of the model based on the existing PHA flag that notes whether or not the NEA is hazardous. By training the model on features that can be markers that an asteroid is hazardous, the model should correctly identify hazardous NEAs to within 20\% absolute error using the data that already exists. It is important to note that since there is a class imbalance and hazardous classes are quite rare, this qualifier is less stable. 
+The team will evaluate the performance of the model based on the existing PHA flag that notes whether or not the NEA is hazardous. Due to the nature of gradient boosted trees, performance will be monitored by checking the log loss of the iterations of smaller models that will be aggregated into the final complete learner. This way, the team can monitor the decrease in log loss as models are built upon to become more accurate. 
 
 \subsection*{Libraries/Tools}
-Listed are libraries the team intends to use for the project, and their intended purposes. \\
-\textbf{Computation}
+
+The team intends to use several libraries commonly used in similar machine learning applications. To handle computation and data manipulation, the team has selected \textbf{pandas} and \textbf{NumPy}. \\
+
+For crucial machine learning functionality, the team will rely on: 
+
 \begin{itemize}
-    \item pandas, for data manipulation and analysis
-    \item numpy, for numerical computations
-    \item scikit-learn, for preprocessing, feature selection, and machine learning models
+    \item \textbf{scikit-learn}, for preprocessing of data, feature selection, machine learning models, classification reports, confusion matrices, and ROC curves. 
+    \item \textbf{imbalanced-learn}, for handling class imbalance in the data
+    \item \textbf{xgboost}, for implementing gradient-boosted trees
 \end{itemize}
 
-\textbf{Machine Learning}
-\begin{itemize}
-    \item imbalanced-learn, for handling class imbalance in the data
-    \item xgboost, for implemented gradient-boosted trees
-    \item lightgbm,as an alternative to xgboost
-    \item catboost, as an alternative to xboost that can specialize in categorical data
-\end{itemize}
-
-\textbf{Visualization}
-\begin{itemize}
-    \item matplotlib, for creating static plots
-    \item seaborn, for static data visualization
-    \item plotly, for interactive visualizations
-\end{itemize}
-
-\textbf{Evaluation}
-\begin{itemize}
-    \item scikit-learn, for metrics such as classification reports, confusion matrices, and Receiver Operating Characteristic (ROC) curves
-\end{itemize}
-
-\textbf{Notebook Support}
-\begin{itemize}
-    \item jupyter, for running jupyter notebooks for exploratory data analysis (EDA)
-\end{itemize}
+For visualization support, the team has selected \textbf{Matplotlib} and \textbf{seaborn} to view static data. If desired, this set can be augmented with \textbf{Plotly} for additional graphing support.
 
 \subsection*{Sources/References}
-
-Du, Z., Jiang, H., Yang, X., Cheng, H., \& Liu, J. (2024). Deep learning-assisted near-Earth asteroid tracking in astronomical images. \textit{Advances in Space Research}, 73(10), 5349–5362. https://doi.org/10.1016/j.asr.2024.02.04\\
+\medskip
+Du, Z., Jiang, H., Yang, X., Cheng, H., \& Liu, J. (2024). Deep learning-assisted near-Earth asteroid tracking in astronomical images. \textit{Advances in Space Research}, 73(10), 5349–5362. \\ https://doi.org/10.1016/j.asr.2024.02.04\\
 
 Khalil, M., Said, M., Sedfy, S. E., Ahmed, A., Khaled, M., Abdellah, N., \& Khaled, N. (2023). Detecting Asteroids and Comets using Machine Learning and Deep Learning. \textit{MSA Engineering Journal, 2(2)}, 967–972. \\ https://doi.org/10.21608/msaeng.2023.291924\\
+
+Kurama, V. (2025, May 26). \textit{Making sense of gradient boosting in Classification: A clear guide. DigitalOcean}. https://www.digitalocean.com/community/tutorials/gradient-boosting-for-classification
 
 \medskip
 
